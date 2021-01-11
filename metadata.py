@@ -150,7 +150,7 @@ class Parser:
       y = re.sub(r"[^0123456789\.\,]",':', x[1][:-1].strip()).split(':')
       z = x[0]
       dates = re.findall(r'\d{2}.\d{2}.\d{4}', z)
-      if len(dates) > 1:
+      if dates:
         change_date = dates[0]
         split_date = dates[-1]
         investment_type = z.split(split_date)[-1].strip()
@@ -265,12 +265,14 @@ class Parser:
                     self.append_data(amount, change_date, investment_type, price, date, 'Kapitalforhøjelse', currency)
 
                 if 'Kapitalnedsættelse' in items.text: # For posts with capital decrease
-                    parsed_text = items.text.split('Kapitalnedsættelse')[1]
-                    currency = self.get_currency(parsed_text)
+                    decrease_split = items.text.split('Kapitalnedsættelse')
+                    for index in range(1, len(decrease_split)): # iterate in case there are more than one events
+                      parsed_text = decrease_split[index]
+                      currency = self.get_currency(parsed_text)
 
-                    change_date, amount, investment_type, price = self.get_capital_decrease(parsed_text, currency)
-                    if change_date:
-                      self.append_data(amount, change_date, investment_type, price, date, 'Kapitalnedsættelse', currency)
+                      change_date, amount, investment_type, price = self.get_capital_decrease(parsed_text, currency)
+                      if change_date:
+                        self.append_data(amount, change_date, investment_type, price, date, 'Kapitalnedsættelse', currency)
 
                 if "Indbetalingsmåde" in items.text: # For posts with new company
                     parsed_text = items.text.split('Indbetalingsmåde')[1]
@@ -306,7 +308,7 @@ def main(args):
       
   print(capital_changes)
 
-  f = open("demo_data.txt", "w")
+  f = open("tests/demo_data.txt", "w")
   f.write(str(capital_changes))
   f.close()
 
