@@ -4,11 +4,13 @@ The program has been tested with Python 3.8.5, selenium version 3.141.0 and chro
 
 Install Prerequisites
 -------------------------------------------
+```
 pip install selenium==3.141.0
-apt-get update # to update ubuntu to correctly run apt install
+apt-get update
 apt install chromium-chromedriver
+```
 
 Run Script
 -------------------------------------------
-python metadata.py companies.txt
+`python metadata.py companies.txt`
 
